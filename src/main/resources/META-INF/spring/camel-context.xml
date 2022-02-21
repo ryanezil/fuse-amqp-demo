@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2014-2017, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. 
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    https://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<!-- Configures the Camel Context-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans                          https://www.springframework.org/schema/beans/spring-beans.xsd                         http://camel.apache.org/schema/spring                         https://camel.apache.org/schema/spring/camel-spring.xsd">
+    
+    <bean class="com.mycompany.OrderGenerator" id="orderGenerator"/>
+    <bean class="org.apache.camel.component.jms.JmsComponent" id="jmsComponent">
+        <property name="configuration" ref="jmsConfiguration"/>
+        <property name="transacted" value="false"/>
+        <property name="cacheLevelName" value="CACHE_AUTO"/>
+    </bean>
+    <bean class="org.apache.camel.component.jms.JmsConfiguration" id="jmsConfiguration">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="concurrentConsumers" value="1"/>
+        <property name="maxConcurrentConsumers" value="10"/>
+        <property name="idleConsumerLimit" value="2"/>
+    </bean>
+    <!-- OPENWIRE protocol Connection Factory     -->
+    <bean class="org.apache.activemq.ActiveMQConnectionFactory" id="connectionFactory">
+        <property name="brokerURL" value="tcp://127.0.0.1:61616"/>
+        <property name="userName" value="amq-demo-user"/>
+        <property name="password" value="password"/>
+    </bean>
+    <bean class="org.apache.camel.component.jms.JmsComponent" id="jmsComponentAmqp">
+        <property name="connectionFactory">
+            <bean class="org.apache.qpid.amqp_1_0.jms.impl.ConnectionFactoryImpl">
+                <constructor-arg index="0" value="localhost"/>
+                <constructor-arg index="1" value="5672"/>
+                <constructor-arg index="2" value="amq-demo-user"/>
+                <constructor-arg index="3" value="password"/>
+                <property name="topicPrefix" value="topic://"/>
+            </bean>
+        </property>
+    </bean>
+    <camelContext id="camel-context-spring" xmlns="http://camel.apache.org/schema/spring">
+        <!-- Load routes from RouteBuilder classes -->
+        <packageScan>
+            <package>com.mycompany</package>
+        </packageScan>
+    </camelContext>
+</beans>
