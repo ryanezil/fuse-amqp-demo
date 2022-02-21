@@ -1,8 +1,8 @@
-= AMQP Fuse Integration route
+# AMQP Fuse Integration route
 
 This demo has been tested on Red Hat Fuse 6.3 (2.4.0.redhat-630446)
 
-== Build & Deploy
+## Build & Deploy
 
 1. Build the project
 
@@ -63,9 +63,9 @@ The output log when the route is running should be something similar to:
 2022-02-21 18:23:10,652 | INFO  | [incomingOrders] | consume-order-to-file | 232 - org.apache.camel.camel-core - 2.17.0.redhat-630446 | Done: processing order4.xml
 ```
 
-== Troubleshooting
+## Troubleshooting
 
-=== Check required dependencies by the bundle:
+### Check required dependencies by the bundle:
 
 ```bash
 > osgi:headers karaf-springdsl-fuse63
@@ -101,7 +101,7 @@ Import-Package =
 
 ```
 
-=== Check wired packages/dependencies to the bundle:
+### Check wired packages/dependencies to the bundle:
 
 Use the same ID (in this example, 405) returned by the above command
 
